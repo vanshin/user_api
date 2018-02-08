@@ -33,6 +33,7 @@ def post_user():
         ('mobile', 'str', 'must'),
         ('status', 'int', 'default', 1),
         ('type', 'int', 'default', 1),
+        ('login_time', 'datetime', 'default', now.strftime(DATETIME_FMT)),
         ('regi_time', 'datetime', 'default', now.strftime(DATETIME_FMT)),
         ('login_address', 'str', 'default', request.remote_addr),
     ]
