@@ -4,8 +4,12 @@
 
 import os
 import datetime
+import time
+import logging
+logging.basicConfig(level=logging.DEBUG)
+log = logging.getLogger()
 
-from flask import request, current_app
+from flask import request, Response, current_app, make_response
 
 from .base import build_args
 from . import main
@@ -55,5 +59,7 @@ def post_login():
         ret['session_id'] = session_id
     else:
         raise UserExcp('用户可能不存在或者账号密码不对')
-    return output(data=ret)
+    resp = make_response(output(ret))
+    resp.set_cookie(key='session_id', value=session_id, expires=time.time()+12*60*60)
+    return resp
 

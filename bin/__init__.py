@@ -1,10 +1,12 @@
 #coding=utf-8
 
+import config
+
 from flask import Flask
 
 def create_app(config_name):
     app = Flask(__name__)
-
+    app.debug = config.DEBUG_MODE
     # 初始化组件
 
     # 蓝图
