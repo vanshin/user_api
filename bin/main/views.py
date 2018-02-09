@@ -64,3 +64,16 @@ def post_login():
     resp.set_cookie(key='session_id', value=session_id, expires=time.time()+12*60*60)
     return resp
 
+@main.route('/info', methods=['GET'])
+def get_info():
+
+    ret = {}
+    args_list = [
+        ('session_id', 'str', 'must'),
+    ]
+
+    args = build_args(request.values, args_list)
+    user = LoginUser(session_id)
+    ret['status'] = user.status
+    ret.update(user.info)
+    return output(ret)
