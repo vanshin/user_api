@@ -12,7 +12,7 @@ from .constants import SESSION_KEY, UserConst
 
 class LoginUser():
 
-    def __init__(self, username, password, session_id=None):
+    def __init__(self, username='', password='', session_id=None):
         self.username = username
         self.password = password
         self.status = UserConst.INIT
@@ -21,8 +21,18 @@ class LoginUser():
         }
         self.load(session_id)
 
-    def load(session_id=None):
-        ret = kotori.hgetall(session_id)
+    def _handle_bytes(self, value):
+        ret = ''
+        if isinstance(value, dict):
+            ret = {}
+            for k,v in value.items():
+                ret[k.decode()] = v.decode()
+        elif isinstance(value, bytes):
+            ret = value.decode()
+        return ret
+
+    def load(self, session_id=None):
+        ret = self._handle_bytes(kotori.hgetall(session_id))
         if ret:
             self.status = UserConst.LOGGED
             self.info.update(ret)
@@ -50,24 +60,24 @@ class LoginUser():
         if not searched_user:
             self.status = UserConst.NULL
             return False
+        self.info['userid'] = searched_user.id
         return True
 
     def login(self, **kwargs):
         '''登录'''
 
         if self.status != UserConst.EXIST:
-            raise UserExcp()
+            raise UserExcp('not exist')
 
         kwargs['username'] = self.username
         kwargs['password'] = self.password
+        kwargs.update(self.info)
 
         self.session_id = get_uuid()
         kotori.hmset(self.session_id, kwargs)
         self.status = UserConst.LOGGED
         for k,v in kwargs.items():
             self.info[k] = v
-
-
         return self.session_id
 
 

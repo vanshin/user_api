@@ -19,6 +19,6 @@ class ParamExcp(BaseException):
 
 class UserExcp(BaseException):
     def __init__(self, message='用户不存在', code=RRET.USER_NOT_EXIST):
-        super(ParamExcp, self).__init__(message, code)
+        super(UserExcp, self).__init__(message, code)
 
 

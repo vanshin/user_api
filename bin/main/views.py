@@ -15,9 +15,9 @@ from .base import build_args
 from . import main
 
 from utils.constants import DATETIME_FMT
-from utils.output import output
 from utils.session import LoginUser
 from utils.error import UserExcp
+from altools.base.output import output
 from model.user import User
 
 @main.route('/user', methods=['POST'])
@@ -29,8 +29,8 @@ def post_user():
     args_list = [
         ('password', 'str', 'must'),
         ('username', 'str', 'must'),
-        ('email', 'str', 'must'),
-        ('mobile', 'str', 'must'),
+        ('email', 'str', 'default', ''),
+        ('mobile', 'str', 'default', ''),
         ('status', 'int', 'default', 1),
         ('type', 'int', 'default', 1),
         ('login_time', 'datetime', 'default', now.strftime(DATETIME_FMT)),
@@ -60,7 +60,7 @@ def post_login():
         ret['session_id'] = session_id
     else:
         raise UserExcp('用户可能不存在或者账号密码不对')
-    resp = make_response(output(ret))
+    resp = make_response(output(data=ret))
     resp.set_cookie(key='session_id', value=session_id, expires=time.time()+12*60*60)
     return resp
 
@@ -73,7 +73,8 @@ def get_info():
     ]
 
     args = build_args(request.values, args_list)
-    user = LoginUser(session_id)
+    user = LoginUser(session_id=args.get('session_id'))
     ret['status'] = user.status
+    log.debug(user.info)
     ret.update(user.info)
-    return output(ret)
+    return output(data=ret)

@@ -4,6 +4,7 @@
 
 import os
 import logging
+logging.basicConfig(level=logging.DEBUG)
 log = logging.getLogger()
 
 from .error import ParamExcp
@@ -13,7 +14,7 @@ def build_args(value, args):
     '''build args'''
     ret = {}
     for i in args:
-        log.debug('参数={}'.format(i[0]))
+        log.debug('参数={}'.format(value.get(i[0])))
         if 'must' in i:
             item_value = value.get(i[0])
             if not item_value:

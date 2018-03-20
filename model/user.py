@@ -18,7 +18,7 @@ class User(Base):
     username = Column(String)
     status = Column(Integer)
     email = Column(String)
-    mobile = Column(Integer)
+    mobile = Column(String)
     password = Column(String)
     login_address = Column(String)
     login_time = Column(DateTime)
