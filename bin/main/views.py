@@ -6,7 +6,8 @@ import os
 import datetime
 import time
 import logging
-logging.basicConfig(level=logging.DEBUG)
+import config
+logging.basicConfig(filename=config.LOG_FILE, level=logging.DEBUG)
 log = logging.getLogger()
 
 from flask import request, Response, current_app, make_response
