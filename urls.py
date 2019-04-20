@@ -1,5 +1,5 @@
-from view.blog import blog
+from view.user.user import UserInfo
 
 urls = [
-    ('/user/', blog.Article)
+    ('/user/info', UserInfo)
 ]

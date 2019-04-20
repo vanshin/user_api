@@ -1,19 +1,29 @@
 
-from base.handler import BaseView
+from altools.base.handler import BaseView
+from altools.model.user import User
+from altools.base.output import output
 
 
-class User(BaseView):
-
-    async def get(self):
-
-        self.args_idft = {
-            'str': ['username', 'mobile', 'email'],
-            'int': ['type']
-        }
-
-        v = self.build_args()
-
-        pass
+class UserInfo(BaseView):
 
     async def post(self):
+
+        self.args_idft = {
+            'int': ['type', 'status'],
+            'str': [
+                'username', 'mobile', 'email',
+                'password'
+            ],
+        }
+
+        v = await self.build_args()
+
+        # 登陆地址
+        v['login_ip'] = self.remote_addr
+
+        await User.add_user(**v)
+
+        return output()
+
+    async def get(self):
         pass
